@@ -23,5 +23,5 @@ sed -i "s/[0-9]*/$currentlinecount/g" currentLine
 # Writes currently playing song to this file
 # This is a workaround for if Icy-Metadata isn't working
 
-ffprobe -v quiet -print_format json -show_format -show_streams "$currentline" > "/var/www/radio/currentlyPlaying.json" 
+echo "{\"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -show_format -show_streams "$currentline")}" > "/var/www/radio/currentlyPlaying.json"
 echo $currentline

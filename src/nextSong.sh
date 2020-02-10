@@ -15,10 +15,10 @@ done
 if [ $currentlinecount -gt $linecount ]
 then
     currentlinecount=1
-    shuf $dir > "${dir}.shuffled"
-    $(mv "${dir}.shuffled" $dir)
+    shuf $dir > "${dir}.shuffled"    
+    cat "${dir}.shuffled" > $dir
 fi
-cp /home/admin/radioScripts/currentLine /tmp
-sed -i /tmp/currentLine -e "s/[0-9]*/$currentlinecount/g"
-cat /tmp/currentLine > /home/admin/radioScripts/currentLine
-echo "{\"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$o_currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -s$echo $currentline")}" > "/var/www/radio/currentlyPlaying.json"
+
+echo $currentlinecount > /home/admin/radioScripts/currentLine
+
+echo "{\"songs\": $(cat /var/www/radio/jsonFromM3u.json), \"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$o_currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -s$echo $currentline")}" > "/var/www/radio/currentlyPlaying.json"

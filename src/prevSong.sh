@@ -16,8 +16,6 @@ do
     currentline=$(head -$currentlinecount $dir | tail -1)
 done
 
-cp /home/admin/radioScripts/currentLine /tmp
-sed -i /tmp/currentLine -e "s/[0-9]*/$currentlinecount/g"
-cat /tmp/currentLine > /home/admin/radioScripts/currentLine
+echo $currentlinecount > /home/admin/radioScripts/currentLine
 
-echo "{\"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$o_currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -s$echo $currentline")}" > "/var/www/radio/currentlyPlaying.json"
+echo "{\"songs\": $(cat /var/www/radio/jsonFromM3u.json), \"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$o_currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -s$echo $currentline")}" > "/var/www/radio/currentlyPlaying.json"

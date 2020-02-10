@@ -15,18 +15,17 @@ if [ $currentlinecount -gt $linecount ]
 then
     currentlinecount=1
     shuf $dir > "${dir}.shuffled"
-    $(mv "${dir}.shuffled" $dir)
+    cat "${dir}.shuffled" > $dir
 fi
 
-cp /home/admin/radioScripts/currentLine /tmp
-sed -i /tmp/currentLine -e "s/[0-9]*/$currentlinecount/g"
-cat /tmp/currentLine > /home/admin/radioScripts/currentLine
+echo $currentlinecount > /home/admin/radioScripts/currentLine
 
 #echo $linecount
 #echo $currentlinecount
 
+sh /home/admin/radioScripts/jsonFromM3u.sh $dir
+
 # Writes currently playing song to this file
 # This is a workaround for if Icy-Metadata isn't working
-
-echo "{\"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -show_format -show_streams "$currentline")}" > "/var/www/radio/currentlyPlaying.json"
+echo "{\"songs\": $(cat /var/www/radio/jsonFromM3u.json), \"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -show_format -show_streams "$currentline")}" > "/var/www/radio/currentlyPlaying.json"
 echo $currentline

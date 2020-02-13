@@ -21,4 +21,4 @@ fi
 
 echo $currentlinecount > /home/admin/radioScripts/currentLine
 
-echo "{\"songs\": $(cat /var/www/radio/jsonFromM3u.json), \"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$o_currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -s$echo $currentline")}" > "/var/www/radio/currentlyPlaying.json"
+echo "{\"songs\": $(cat /var/www/radio/jsonFromM3u.json), \"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\", \"currently_playing\": \"$o_currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -show_format -show_streams "$o_currentline" | sed 's/\"LYRICS\": \".*\"/\"LYRICS\": \"\REDACTED\"/g')}" > "/var/www/radio/currentlyPlaying.json" echo $currentline

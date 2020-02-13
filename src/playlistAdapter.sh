@@ -27,5 +27,5 @@ sh /home/admin/radioScripts/jsonFromM3u.sh $dir
 
 # Writes currently playing song to this file
 # This is a workaround for if Icy-Metadata isn't working
-echo "{\"songs\": $(cat /var/www/radio/jsonFromM3u.json), \"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\", \"currently_playing\": \"$o_currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -show_format -show_streams "$o_currentline" | sed 's/\"LYRICS\": \".*\"/\"LYRICS\": \"\REDACTED\"/g')}" > "/var/www/radio/currentlyPlaying.json"
+echo "{\"songs\": $(cat /var/www/radio/jsonFromM3u.json), \"current_line\": $currentlinecount, \"total_lines\": $linecount, \"next_up\": \"$(head -$((currentlinecount)) $dir | tail -1)\",  \"currently_playing\": \"$currentline\", \"song_info\": $(ffprobe -v quiet -print_format json -show_format -show_streams "$currentline")}" > "/var/www/radio/currentlyPlaying.json"
 echo $currentline
